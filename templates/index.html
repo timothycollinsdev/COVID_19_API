@@ -1,0 +1,186 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css">
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+    <title>COVID-19</title>
+    <style>
+        .container {
+            width: 100%
+        }
+
+        .left {
+            float: left;
+            width: 50%;
+            height: 100%;
+        }
+
+        .right {
+            float: left;
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="left">
+        <h2>Pakistan COVID-19 chart <select name="" id="" onchange="update_type(this.value)">
+            <option value="total_cases">Total Cases</option>
+            <option value="new_cases">New Cases</option>
+            <option value="total_deaths">Total Deaths</option>
+            <option value="new_deaths">New Deaths</option>
+            <option value="total_recovered">Total Recovered</option>
+            <option value="active_cases">Active Cases</option>
+        </select></h2>
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
+    <div class="right">
+        <h2>Global COVID-19 chart</h2>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script type="text/javascript">
+    var countries = [
+        {% for country in countries %}
+            {"Name": "{{country.country}}", "Count": {{ country.total_cases }}},
+        {% endfor %}
+    ];
+    dataset = {
+        "children": countries
+    };
+
+    var diameter = 600;
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    var bubble = d3.pack(dataset)
+        .size([diameter, diameter])
+        .padding(1.5);
+
+    var svg = d3.select("body")
+        .append("svg")
+        .attr("width", diameter)
+        .attr("height", diameter)
+        .attr("class", "bubble");
+
+    var nodes = d3.hierarchy(dataset)
+        .sum(function (d) {
+            return d.Count;
+        });
+
+    var node = svg.selectAll(".node")
+        .data(bubble(nodes).descendants())
+        .enter()
+        .filter(function (d) {
+            return !d.children
+        })
+        .append("g")
+        .attr("class", "node")
+        .attr("transform", function (d) {
+            return "translate(" + d.x + "," + d.y + ")";
+        });
+
+    node.append("title")
+        .text(function (d) {
+            return d.data.Name + ": " + d.data.Count;
+        });
+
+    node.append("circle")
+        .attr("r", function (d) {
+            return d.r;
+        })
+        .style("fill", function (d, i) {
+            return color(i);
+        });
+
+    node.append("text")
+        .attr("dy", ".2em")
+        .style("text-anchor", "middle")
+        .text(function (d) {
+            return d.data.Name.substring(0, d.r / 3);
+        })
+        .attr("font-family", "sans-serif")
+        .attr("font-size", function (d) {
+            return d.r / 5;
+        })
+        .attr("fill", "white");
+
+    node.append("text")
+        .attr("dy", "1.3em")
+        .style("text-anchor", "middle")
+        .text(function (d) {
+            return d.data.Count;
+        })
+        .attr("font-family", "Gill Sans", "Gill Sans MT")
+        .attr("font-size", function (d) {
+            return d.r / 5;
+        })
+        .attr("fill", "white");
+
+    d3.select(self.frameElement)
+        .style("height", diameter + "px");
+
+</script>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var labels = [{% for record in pakistan_records %}'{{ record.created_at | date:'Y-m-d' }}',{% endfor %}];
+
+
+
+    var label = [{% for record in pakistan_records %}'{{ record.created_at | date:'Y-m-d'}}', {% endfor %}];
+    var data = [{% for record in pakistan_records %}{{ record.total_cases }}, {% endfor %}];
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '# of Cases',
+                data: data,
+                borderWidth: 1,
+
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+function update_type(type) {
+        if (type == 'total_cases') {
+            var data = [{% for record in pakistan_records %}{{ record.total_cases }}, {% endfor %}];
+        }
+        else if(type == 'new_cases')
+        {
+            var data = [{% for record in pakistan_records %}{{ record.new_cases }}, {% endfor %}];
+        }
+        else if(type == 'total_deaths')
+        {
+            var data = [{% for record in pakistan_records %}{{ record.total_deaths }}, {% endfor %}];
+        }
+        else if(type == 'new_deaths')
+        {
+            var data = [{% for record in pakistan_records %}{{ record.new_deaths }}, {% endfor %}];
+        }
+        else if(type == 'total_recovered')
+        {
+            var data = [{% for record in pakistan_records %}{{ record.total_recovered }}, {% endfor %}];
+        }
+        else if(type == 'active_cases')
+        {
+            var data = [{% for record in pakistan_records %}{{ record.active_cases }}, {% endfor %}];
+        }
+        myChart.data.datasets[0].data=data;
+        myChart.update()
+    }
+
+</script>
+</body>
+</html>
