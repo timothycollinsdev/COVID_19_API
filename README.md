@@ -10,4 +10,5 @@ To setup simply:
 - python manage.py migrate --settings=COVID_19_API.settings.local
 - python manage.py populate_db
 
-
+## APIs Exposed
+localhost:8000/api/v1/all/
