@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import *
-
+from rangefilter.filter import DateRangeFilter
 
 # Register your models here.
 class CoronaCounrtyAdmin(admin.ModelAdmin):
@@ -16,8 +16,10 @@ admin.site.register(CoronaCounrty, CoronaCounrtyAdmin)
 
 
 class TrackCountryAdmin(admin.ModelAdmin):
-	search_fields = ("country",)
+	search_fields = ("country","created_at")
 	list_display = ("country", "total_cases", "new_cases", "total_deaths",
 	                "new_deaths", "total_recovered", "active_cases", "serious_cases", "tot_cases")
-
+	list_filter = (
+		('created_at', DateRangeFilter),
+	)
 admin.site.register(TrackCountry, TrackCountryAdmin)
