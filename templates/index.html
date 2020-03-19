@@ -133,7 +133,7 @@
     var label = [{% for record in pakistan_records %}'{{ record.created_at | date:'Y-m-d'}}', {% endfor %}];
     var data = [{% for record in pakistan_records %}{{ record.total_cases }}, {% endfor %}];
     var myChart = new Chart(ctx, {
-        type: 'bar',
+        type: 'line',
         data: {
             labels: labels,
             datasets: [{
