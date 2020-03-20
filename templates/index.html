@@ -11,17 +11,6 @@
         .container {
             width: 100%
         }
-
-        .left {
-            float: left;
-            width: 50%;
-            height: 100%;
-        }
-
-        .right {
-            float: left;
-            width: 50%;
-        }
     </style>
 </head>
 <body>
@@ -35,7 +24,8 @@
             <option value="total_recovered">Total Recovered</option>
             <option value="active_cases">Active Cases</option>
         </select></h2>
-        <canvas id="myChart" width="400" height="400"></canvas>
+        <canvas id="myChart" ></canvas>
+        <div class=""></div>
     </div>
     <div class="right">
         <h2>Global COVID-19 chart</h2>
@@ -126,12 +116,9 @@
 </script>
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
-    var labels = [{% for record in pakistan_records %}'{{ record.created_at | date:'Y-m-d' }}',{% endfor %}];
-
-
-
-    var label = [{% for record in pakistan_records %}'{{ record.created_at | date:'Y-m-d'}}', {% endfor %}];
+    var labels = [{% for record in pakistan_records %}'{{ record.created_at | date:'Y-m-d h:i a' }}',{% endfor %}];
     var data = [{% for record in pakistan_records %}{{ record.total_cases }}, {% endfor %}];
+    var growth_factor = [{% for record in pakistan_records %}{{ record.total_cases }}, {% endfor %}];
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -140,6 +127,8 @@
                 label: '# of Cases',
                 data: data,
                 borderWidth: 1,
+
+            },{
 
             }]
         },
