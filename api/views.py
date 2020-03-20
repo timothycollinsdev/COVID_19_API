@@ -28,7 +28,7 @@ class IndexView(TemplateView):
 	def get(self, request, *args, **kwargs):
 		context = locals()
 		countries = CoronaCounrty.objects.all()
-		pk = TrackCountry.objects.filter(country="Pakistan")
+		pk = TrackCountry.objects.filter(country="Pakistan").order_by("created_at")
 		context.update({
 			"countries": countries,
 			'pakistan_records': pk
