@@ -29,8 +29,17 @@ class IndexView(TemplateView):
 		context = locals()
 		countries = CoronaCounrty.objects.all()
 		pk = TrackCountry.objects.filter(country="Pakistan").order_by("created_at")
+		counter  = 0
+		growth_factor = {}
+		for pakistan_record in pk.order_by('-created_at__day').distinct('created_at__day'):
+			previous_value = pakistan_record
+			if counter > 0:
+				growth_factor[pakistan_record.created_at.strftime("%Y-%M-%d")] = pakistan_record.new_cases / previous_value.new_cases
+			counter = counter + 1
+		
 		context.update({
 			"countries": countries,
-			'pakistan_records': pk
+			'pakistan_records': pk,
+			'growth_factor': growth_factor
 		})
 		return render(request, self.template_name, context)

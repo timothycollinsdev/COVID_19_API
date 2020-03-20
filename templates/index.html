@@ -17,8 +17,11 @@
 <div class="container">
     <div class="left">
         <h2>Pakistan COVID-19 chart </h2>
-        <canvas id="myChart" ></canvas>
-        <div class=""></div>
+        <canvas id="myChart"></canvas>
+    </div>
+    <div class="">
+        <h2>Growth Factor</h2>
+        <canvas id="growth_factor_graph"></canvas>
     </div>
     <div class="right">
         <h2>Global COVID-19 chart</h2>
@@ -109,7 +112,7 @@
 </script>
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
-    var labels = [{% for record in pakistan_records %}'{{ record.created_at | date:'Y-m-d h:i a' }}',{% endfor %}];
+    var labels = [{% for record in pakistan_records %}'{{ record.created_at | date:'d M h:i a' }}',{% endfor %}];
     var total_cases_data = [{% for record in pakistan_records %}{{ record.total_cases }}, {% endfor %}];
     var new_cases_data = [{% for record in pakistan_records %}{{ record.new_cases }}, {% endfor %}];
     var total_deaths_data = [{% for record in pakistan_records %}{{ record.total_deaths }}, {% endfor %}];
@@ -122,18 +125,42 @@
                 label: '# of Total Cases',
                 data: total_cases_data,
                 backgroundColor: 'rgba(43,154,146,0.5)'
-            },{
+            }, {
                 label: '# of New Cases',
                 data: new_cases_data,
                 backgroundColor: 'rgba(154,150,34,0.5)'
-            },{
+            }, {
                 label: 'Total Deaths',
                 data: total_deaths_data,
                 backgroundColor: 'rgba(154,35,32,0.5)'
-            },{
+            }, {
                 label: 'New Deaths',
                 data: new_deaths_data,
                 backgroundColor: 'rgba(68,42,154,0.5)'
+            }
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    var ctx = document.getElementById('growth_factor_graph').getContext('2d');
+    var growth_factor_label = [{% for obj in growth_factor.keys %}'{{ obj }}', {% endfor %}];
+    var growth_factor_data = [{% for record1 in growth_factor.values %}{{ record1 }}, {% endfor %}];
+    var growth_factor_graph = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: growth_factor_label,
+            datasets: [{
+                label: 'Growth Factor',
+                data: growth_factor_data,
+                backgroundColor: 'rgba(43,154,146,0.5)'
             }
             ]
         },
