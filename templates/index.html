@@ -16,14 +16,7 @@
 <body>
 <div class="container">
     <div class="left">
-        <h2>Pakistan COVID-19 chart <select name="" id="" onchange="update_type(this.value)">
-            <option value="total_cases">Total Cases</option>
-            <option value="new_cases">New Cases</option>
-            <option value="total_deaths">Total Deaths</option>
-            <option value="new_deaths">New Deaths</option>
-            <option value="total_recovered">Total Recovered</option>
-            <option value="active_cases">Active Cases</option>
-        </select></h2>
+        <h2>Pakistan COVID-19 chart </h2>
         <canvas id="myChart" ></canvas>
         <div class=""></div>
     </div>
@@ -117,18 +110,32 @@
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
     var labels = [{% for record in pakistan_records %}'{{ record.created_at | date:'Y-m-d h:i a' }}',{% endfor %}];
-    var data = [{% for record in pakistan_records %}{{ record.total_cases }}, {% endfor %}];
-    var growth_factor = [{% for record in pakistan_records %}{{ record.total_cases }}, {% endfor %}];
+    var total_cases_data = [{% for record in pakistan_records %}{{ record.total_cases }}, {% endfor %}];
+    var new_cases_data = [{% for record in pakistan_records %}{{ record.new_cases }}, {% endfor %}];
+    var total_deaths_data = [{% for record in pakistan_records %}{{ record.total_deaths }}, {% endfor %}];
+    var new_deaths_data = [{% for record in pakistan_records %}{{ record.total_deaths }}, {% endfor %}];
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
             datasets: [{
-                label: '# of Cases',
-                data: data,
-                borderWidth: 1,
-
-            }]
+                label: '# of Total Cases',
+                data: total_cases_data,
+                backgroundColor: 'rgba(43,154,146,0.5)'
+            },{
+                label: '# of New Cases',
+                data: new_cases_data,
+                backgroundColor: 'rgba(154,150,34,0.5)'
+            },{
+                label: 'Total Deaths',
+                data: total_deaths_data,
+                backgroundColor: 'rgba(154,35,32,0.5)'
+            },{
+                label: 'New Deaths',
+                data: new_deaths_data,
+                backgroundColor: 'rgba(68,42,154,0.5)'
+            }
+            ]
         },
         options: {
             scales: {
@@ -140,34 +147,6 @@
             }
         }
     });
-function update_type(type) {
-        if (type == 'total_cases') {
-            var data = [{% for record in pakistan_records %}{{ record.total_cases }}, {% endfor %}];
-        }
-        else if(type == 'new_cases')
-        {
-            var data = [{% for record in pakistan_records %}{{ record.new_cases }}, {% endfor %}];
-        }
-        else if(type == 'total_deaths')
-        {
-            var data = [{% for record in pakistan_records %}{{ record.total_deaths }}, {% endfor %}];
-        }
-        else if(type == 'new_deaths')
-        {
-            var data = [{% for record in pakistan_records %}{{ record.new_deaths }}, {% endfor %}];
-        }
-        else if(type == 'total_recovered')
-        {
-            var data = [{% for record in pakistan_records %}{{ record.total_recovered }}, {% endfor %}];
-        }
-        else if(type == 'active_cases')
-        {
-            var data = [{% for record in pakistan_records %}{{ record.active_cases }}, {% endfor %}];
-        }
-        myChart.data.datasets[0].data=data;
-        myChart.update()
-    }
-
 </script>
 </body>
 </html>
