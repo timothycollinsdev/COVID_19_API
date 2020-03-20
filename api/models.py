@@ -28,6 +28,7 @@ class TrackCountry(models.Model):
 	serious_cases = models.IntegerField(null=True, blank=True)
 	tot_cases = models.CharField(max_length=250, null=True, blank=True)
 	created_at = models.DateTimeField(auto_now_add=True)
+	created_at.editable = True
 	updated_at = models.DateTimeField(auto_now=True)
 	
 	def __str__(self):

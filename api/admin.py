@@ -22,4 +22,5 @@ class TrackCountryAdmin(admin.ModelAdmin):
 	list_filter = (
 		('created_at', DateRangeFilter),
 	)
+
 admin.site.register(TrackCountry, TrackCountryAdmin)
