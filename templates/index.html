@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.css">
     <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+    <!-- Latest compiled and minified CSS & JS -->
+    <link rel="stylesheet" media="screen" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>COVID-19</title>
     <style>
         .container {
@@ -17,11 +20,11 @@
 <div class="container">
     <div class="left">
         <h2>Pakistan COVID-19 chart </h2>
-        <canvas id="myChart"></canvas>
+        <canvas id="myChart" height="100px"></canvas>
     </div>
     <div class="">
         <h2>Growth Factor</h2>
-        <canvas id="growth_factor_graph"></canvas>
+        <canvas id="growth_factor_graph" height="50px"></canvas>
     </div>
     <div class="right">
         <h2>Global COVID-19 chart</h2>
@@ -160,7 +163,7 @@
             datasets: [{
                 label: 'Growth Factor',
                 data: growth_factor_data,
-                backgroundColor: 'rgba(43,154,146,0.5)'
+                backgroundColor: 'rgba(154,59,19,0.5)'
             }
             ]
         },

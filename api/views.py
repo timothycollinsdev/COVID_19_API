@@ -1,7 +1,5 @@
 # Create your views here.
-import json
 
-from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -28,14 +26,16 @@ class IndexView(TemplateView):
 	def get(self, request, *args, **kwargs):
 		context = locals()
 		countries = CoronaCounrty.objects.all()
-		pk = TrackCountry.objects.filter(country="Pakistan").order_by("created_at")
-		counter  = 0
+		pk = TrackCountry.objects.filter(country="Pakistan").order_by("created_at__day").distinct('created_at__day')
+		counter = 0
 		growth_factor = {}
-		for pakistan_record in pk.order_by('-created_at__day').distinct('created_at__day'):
-			previous_value = pakistan_record
+		previous_value = None
+		for pakistan_record in pk.order_by('created_at__day').distinct('created_at__day'):
 			if counter > 0:
-				growth_factor[pakistan_record.created_at.strftime("%Y-%M-%d")] = pakistan_record.new_cases / previous_value.new_cases
+				growth_factor["%s - %s" % (previous_value.created_at.strftime("%d %b"),
+				                           pakistan_record.created_at.strftime("%d %b"))] = pakistan_record.new_cases / previous_value.new_cases
 			counter = counter + 1
+			previous_value = pakistan_record
 		
 		context.update({
 			"countries": countries,
