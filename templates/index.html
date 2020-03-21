@@ -119,7 +119,7 @@
     var total_cases_data = [{% for record in pakistan_records %}{{ record.total_cases }}, {% endfor %}];
     var new_cases_data = [{% for record in pakistan_records %}{{ record.new_cases }}, {% endfor %}];
     var total_deaths_data = [{% for record in pakistan_records %}{{ record.total_deaths }}, {% endfor %}];
-    var new_deaths_data = [{% for record in pakistan_records %}{{ record.total_deaths }}, {% endfor %}];
+    var new_deaths_data = [{% for record in pakistan_records %}{{ record.new_deaths }}, {% endfor %}];
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
