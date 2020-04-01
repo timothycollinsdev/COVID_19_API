@@ -26,14 +26,14 @@ class IndexView(TemplateView):
 	def get(self, request, *args, **kwargs):
 		context = locals()
 		countries = CoronaCounrty.objects.all()
-		pk = TrackCountry.objects.filter(country="Pakistan").order_by( "created_at__day", "-created_at",).distinct('created_at__day')
+		pk = TrackCountry.objects.filter(country="Pakistan").order_by( "created_at__date", 'created_at__day', "-created_at",).distinct('created_at__date', 'created_at__day')
 		counter = 0
 		growth_factor = {}
 		previous_value = None
 		for pakistan_record in pk:
 			if counter > 0:
 				growth_factor["%s - %s" % (previous_value.created_at.strftime("%d %b"),
-				                           pakistan_record.created_at.strftime("%d %b"))] = pakistan_record.new_cases / previous_value.new_cases
+				                           pakistan_record.created_at.strftime("%d %b"))] = round(pakistan_record.new_cases / previous_value.new_cases, 2)
 			counter = counter + 1
 			previous_value = pakistan_record
 		
